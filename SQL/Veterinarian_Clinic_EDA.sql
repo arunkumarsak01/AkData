@@ -2567,15 +2567,19 @@ insert into pets values
 use clinic;
 
 --- Q1. Total number of Pets in the Dataset:
+--- A1. 100
 
 SELECT COUNT(*) AS NUMBER_OF_PETS FROM PETS;
 
+
 --- Q2. Total Number of Pets by Kind:
+--- A2. DOGS - 57 |  CAT - 31 | PARROT - 12	
 
 SELECT KIND,COUNT(*) AS COUNT FROM PETS
 GROUP BY KIND;
 
 --- Q3. Procedural Type that costs high:
+--- A3. GENERAL SURGERIES | Intestinal Anas | 775
 
 SELECT DISTINCT * FROM PROCEDUREDETAILS
 WHERE PRICE = (SELECT MAX(PRICE) FROM PROCEDUREDETAILS);
@@ -2600,6 +2604,7 @@ JOIN OWNERS O ON O.OWNER_ID = P.OWNER_ID
 WHERE O.ZIPCODE LIKE '483%';
 
 --- Q8. Top 3 cities with maximum dog pets in the datasets:
+--- A8. Southfield,Grand Rapids,Detroit
 
 SELECT O.CITY,COUNT(*) AS NUMBER_OF_DOGS FROM OWNERS O 
 JOIN PETS P 
@@ -2610,6 +2615,7 @@ ORDER BY NUMBER_OF_DOGS
 DESC LIMIT 3;
 
 --- Q9. List of Owners with More than 1 Pet in the dataset:
+--- A9. Elvia,Gary,Robert,Mario,Benjamin,Charles,Stacey,Lee
 
 SELECT * FROM (SELECT O.NAME,P.OWNER_ID,COUNT(*) AS NUMBER_OF_PETS FROM PETS P 
 JOIN OWNERS O 
