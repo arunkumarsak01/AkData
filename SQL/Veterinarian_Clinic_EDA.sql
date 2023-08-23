@@ -2566,16 +2566,50 @@ insert into pets values
 
 use clinic;
 
-### Q1 - Total number of Pets in the Dataset:
+--- Q1. Total number of Pets in the Dataset:
 
 SELECT COUNT(*) AS NUMBER_OF_PETS FROM PETS;
 
-### Q2 - Total Number of Pets by Kind:
+--- Q2. Total Number of Pets by Kind:
 
 SELECT KIND,COUNT(*) AS COUNT FROM PETS
 GROUP BY KIND;
 
-### Q3 - List of Owners with More than 1 Pet in the dataset:
+--- Q3. Procedural Type that costs high:
+
+SELECT DISTINCT * FROM PROCEDUREDETAILS
+WHERE PRICE = (SELECT MAX(PRICE) FROM PROCEDUREDETAILS);
+
+--- Q4. Number of different procedures available within Procedure Types: 
+
+SELECT DISTINCT PROCEDURE_TYPE,(COUNT(*)) AS DIFFERENT_PROCEDURES FROM PROCEDUREDETAILS
+GROUP BY PROCEDURE_TYPE; 
+
+--- Q5. List of Owners who lives in the Southfield and Westland City:
+
+SELECT * FROM OWNERS WHERE CITY IN ('SOUTHFIELD','WESTLAND');
+
+--- Q6. List of Owners who lives in city with Zipcode that starts with 482:
+
+SELECT * FROM OWNERS WHERE ZIPCODE LIKE '482%';
+
+--- Q7. List of Pets that lives in city with Zipcode that starts with 483:
+
+SELECT P.NAME AS PET_NAME,P.KIND AS KIND, O.NAME AS OWNER_NAME,O.ZIPCODE,O.CITY FROM PETS P 
+JOIN OWNERS O ON O.OWNER_ID = P.OWNER_ID
+WHERE O.ZIPCODE LIKE '483%';
+
+--- Q8. Top 3 cities with maximum dog pets in the datasets:
+
+SELECT O.CITY,COUNT(*) AS NUMBER_OF_DOGS FROM OWNERS O 
+JOIN PETS P 
+ON O.OWNER_ID = P.OWNER_ID
+WHERE KIND='DOG'
+GROUP BY O.CITY
+ORDER BY NUMBER_OF_DOGS
+DESC LIMIT 3;
+
+--- Q9. List of Owners with More than 1 Pet in the dataset:
 
 SELECT * FROM (SELECT O.NAME,P.OWNER_ID,COUNT(*) AS NUMBER_OF_PETS FROM PETS P 
 JOIN OWNERS O 
@@ -2585,24 +2619,24 @@ ORDER BY NUMBER_OF_PETS) AS A
 WHERE NUMBER_OF_PETS > 1;
 
 
-### Q4 - List of Owners who owns Parrot:
+--- Q10. List of Owners who owns Parrot:
 
 SELECT O.NAME,COUNT(*) FROM OWNERS O
 JOIN PETS P ON O.OWNER_ID = P.OWNER_ID
 WHERE KIND ='PARROT'
 GROUP BY O.NAME;
 
-### Q5 - Owners and their Pets : 
+--- Q11. Owners and their Pets : 
 
 SELECT P.NAME AS PET_NAME,O.NAME AS OWNER_NAME,P.KIND AS KIND FROM OWNERS O 
 JOIN PETS P ON O.OWNER_ID = P.OWNER_ID;
 
-### Q6 - Which Pets from this clinic had its procedures performed:
+--- Q12. Which Pets from this clinic had its procedures performed:
 
 SELECT P.NAME,P.KIND FROM PETS P 
 JOIN PROCEDUREHISTORY H ON P.PET_ID = H.PET_ID;
 
-### Q7 - Matching up procedures Performed to the pets in this clinic to their descriptions:
+--- Q13. Matching up procedures Performed to the pets in this clinic to their descriptions:.
 
 SELECT DISTINCT P.NAME,P.PET_ID,D.PROCEDURE_TYPE,D.PROCEDURESUBCODE,D.DESCRIPTION FROM PETS P 
 INNER JOIN PROCEDUREHISTORY H ON P.PET_ID = H.PET_ID
@@ -2610,7 +2644,7 @@ INNER JOIN PROCEDUREDETAILS D ON H.PROCEDURESUBCODE = D.PROCEDURESUBCODE
 							AND H.PROCEDURE_TYPE = D.PROCEDURE_TYPE;
 						
 
-### Q8 - Total Procedure prices incurred by the owners from the clinic in question:
+--- Q14. Total Procedure prices incurred by the owners from the clinic in question:
 
 SELECT DISTINCT P.NAME as PET_NAME,P.PET_ID,O.NAME AS OWNER_NAME,SUM(D.PRICE) as Total_Procedural_Price FROM PETS P 
 INNER JOIN PROCEDUREHISTORY H ON P.PET_ID = H.PET_ID
@@ -2618,3 +2652,8 @@ INNER JOIN PROCEDUREDETAILS D ON H.PROCEDURESUBCODE = D.PROCEDURESUBCODE
 							AND H.PROCEDURE_TYPE = D.PROCEDURE_TYPE
 INNER JOIN OWNERS O ON O.OWNER_ID = P.OWNER_ID
 GROUP BY P.NAME,P.PET_ID,O.NAME;
+
+
+
+
+
